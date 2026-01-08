@@ -417,6 +417,14 @@ class ProductivityApp {
         const ctx = document.getElementById('productivityChart');
         if (!ctx) return;
 
+        // Check if Chart.js is available
+        if (typeof Chart === 'undefined') {
+            // Fallback: Create a simple text-based visualization
+            const container = ctx.parentElement;
+            container.innerHTML = '<div class="chart-fallback"><p>📊 Productivity visualization</p><p class="chart-message">Complete tasks to see your productivity trends!</p></div>';
+            return;
+        }
+
         const last7Days = [];
         const tasksPerDay = [];
         const today = new Date();
