@@ -3,30 +3,165 @@
     <head>
         <meta charset="UTF-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-        <title>Countdown Timer</title>
+        <title>ProductivityFlow - Make Every Minute Count</title>
         <link rel="stylesheet" href="style.css" />
+        <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
         <script src="script.js" defer></script>
     </head>
     <body>
-        <h1>New Years Eve</h1>
+        <!-- Header -->
+        <header class="header">
+            <div class="container">
+                <h1 class="app-title">🎯 ProductivityFlow</h1>
+                <p class="app-subtitle">Make every minute count</p>
+                <div class="header-controls">
+                    <button id="themeToggle" class="icon-btn" title="Toggle theme">🌓</button>
+                    <button id="notificationBtn" class="icon-btn" title="Enable notifications">🔔</button>
+                </div>
+            </div>
+        </header>
 
-        <div class="countdown-container">
-            <div class="countdown-el days-c">
-                <p class="big-text" id="days">0</p>
-                <span>days</span>
-            </div>
-            <div class="countdown-el hours-c">
-                <p class="big-text" id="hours">0</p>
-                <span>hours</span>
-            </div>
-            <div class="countdown-el mins-c">
-                <p class="big-text" id="mins">0</p>
-                <span>mins</span>
-            </div>
-            <div class="countdown-el seconds-c">
-                <p class="big-text" id="seconds">0</p>
-                <span>seconds</span>
-            </div>
-        </div>
+        <!-- Main Container -->
+        <main class="container main-content">
+            <!-- Dashboard Section -->
+            <section class="dashboard-section">
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-icon">📊</div>
+                        <div class="stat-info">
+                            <h3 id="totalTasks">0</h3>
+                            <p>Total Tasks</p>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon">✅</div>
+                        <div class="stat-info">
+                            <h3 id="completedTasks">0</h3>
+                            <p>Completed</p>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon">⏱️</div>
+                        <div class="stat-info">
+                            <h3 id="totalTime">0h</h3>
+                            <p>Time Tracked</p>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon">🔥</div>
+                        <div class="stat-info">
+                            <h3 id="streak">0</h3>
+                            <p>Day Streak</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Timer Section -->
+            <section class="timer-section">
+                <h2 class="section-title">⏰ Focus Timer</h2>
+                <div class="timer-card">
+                    <div class="timer-display">
+                        <span id="timerMinutes">25</span>:<span id="timerSeconds">00</span>
+                    </div>
+                    <div class="timer-label" id="timerLabel">Ready to focus</div>
+                    <div class="timer-controls">
+                        <button id="startTimer" class="btn btn-primary">Start</button>
+                        <button id="pauseTimer" class="btn btn-secondary" disabled>Pause</button>
+                        <button id="resetTimer" class="btn btn-secondary">Reset</button>
+                    </div>
+                    <div class="timer-presets">
+                        <button class="preset-btn" data-minutes="25">25 min</button>
+                        <button class="preset-btn" data-minutes="15">15 min</button>
+                        <button class="preset-btn" data-minutes="5">5 min</button>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Task Logger Section -->
+            <section class="task-section">
+                <h2 class="section-title">📝 Task Logger</h2>
+                <div class="task-input-card">
+                    <form id="taskForm">
+                        <input type="text" id="taskTitle" placeholder="What needs to be done?" required />
+                        <div class="form-row">
+                            <select id="taskCategory">
+                                <option value="work">💼 Work</option>
+                                <option value="personal">👤 Personal</option>
+                                <option value="health">💪 Health</option>
+                                <option value="learning">📚 Learning</option>
+                                <option value="other">📌 Other</option>
+                            </select>
+                            <select id="taskPriority">
+                                <option value="high">🔴 High</option>
+                                <option value="medium">🟡 Medium</option>
+                                <option value="low">🟢 Low</option>
+                            </select>
+                        </div>
+                        <button type="submit" class="btn btn-primary btn-block">Add Task</button>
+                    </form>
+                </div>
+
+                <div class="task-filters">
+                    <button class="filter-btn active" data-filter="all">All</button>
+                    <button class="filter-btn" data-filter="active">Active</button>
+                    <button class="filter-btn" data-filter="completed">Completed</button>
+                </div>
+
+                <div id="taskList" class="task-list"></div>
+            </section>
+
+            <!-- Goals Section -->
+            <section class="goals-section">
+                <h2 class="section-title">🎯 Goals</h2>
+                <div class="goals-tabs">
+                    <button class="tab-btn active" data-tab="short-term">Short-term</button>
+                    <button class="tab-btn" data-tab="long-term">Long-term</button>
+                </div>
+                
+                <div class="goal-input-card">
+                    <form id="goalForm">
+                        <input type="text" id="goalTitle" placeholder="Enter your goal..." required />
+                        <input type="date" id="goalDeadline" />
+                        <button type="submit" class="btn btn-primary btn-block">Add Goal</button>
+                    </form>
+                </div>
+
+                <div id="goalList" class="goal-list"></div>
+            </section>
+
+            <!-- AI Coaching Section -->
+            <section class="ai-section">
+                <h2 class="section-title">🤖 AI Coaching</h2>
+                <div class="ai-card">
+                    <div id="aiInsights" class="ai-insights">
+                        <p class="ai-message">Complete some tasks to get personalized insights!</p>
+                    </div>
+                    <button id="refreshInsights" class="btn btn-secondary">Refresh Insights</button>
+                </div>
+            </section>
+
+            <!-- Achievements Section -->
+            <section class="achievements-section">
+                <h2 class="section-title">🏆 Achievements</h2>
+                <div id="badgesList" class="badges-grid"></div>
+            </section>
+
+            <!-- Charts Section -->
+            <section class="charts-section">
+                <h2 class="section-title">📈 Productivity Trends</h2>
+                <div class="chart-container">
+                    <canvas id="productivityChart"></canvas>
+                </div>
+            </section>
+        </main>
+
+        <!-- Motivational Toast -->
+        <div id="motivationalToast" class="toast"></div>
+
+        <!-- Footer -->
+        <footer class="footer">
+            <p>&copy; 2026 ProductivityFlow - Your journey to peak productivity</p>
+        </footer>
     </body>
 </html>
