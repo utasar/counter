@@ -1,3 +1,7 @@
+// ==================== CONSTANTS ====================
+const MS_PER_DAY = 24 * 60 * 60 * 1000;
+const NUDGE_INTERVAL_MS = 30 * 60 * 1000; // 30 minutes
+
 // ==================== STATE MANAGEMENT ====================
 class ProductivityApp {
     constructor() {
@@ -20,6 +24,15 @@ class ProductivityApp {
         this.currentGoalTab = 'short-term';
         this.theme = this.loadFromStorage('theme') || 'light';
         this.notificationsEnabled = false;
+        this.idCounter = this.loadFromStorage('idCounter') || 1;
+    }
+
+    // Generate unique ID
+    generateId() {
+        const id = `${Date.now()}-${this.idCounter}`;
+        this.idCounter++;
+        this.saveToStorage('idCounter', this.idCounter);
+        return id;
     }
 
     loadFromStorage(key) {
@@ -43,7 +56,7 @@ class ProductivityApp {
     // Task Management
     addTask(title, category, priority) {
         const task = {
-            id: Date.now(),
+            id: this.generateId(),
             title,
             category,
             priority,
@@ -88,7 +101,7 @@ class ProductivityApp {
     // Goal Management
     addGoal(title, deadline, type) {
         const goal = {
-            id: Date.now(),
+            id: this.generateId(),
             title,
             deadline,
             type: type || this.currentGoalTab,
@@ -281,7 +294,7 @@ class ProductivityApp {
         
         if (this.tasks.some(t => t.completed && new Date(t.createdAt).toDateString() === today)) {
             if (lastActive !== today) {
-                const yesterday = new Date(Date.now() - 86400000).toDateString();
+                const yesterday = new Date(Date.now() - MS_PER_DAY).toDateString();
                 if (lastActive === yesterday) {
                     this.stats.streak++;
                 } else if (lastActive !== today) {
@@ -578,7 +591,7 @@ class ProductivityApp {
             if (this.tasks.length > 0) {
                 this.showToast(messages[Math.floor(Math.random() * messages.length)]);
             }
-        }, 1800000); // Every 30 minutes
+        }, NUDGE_INTERVAL_MS);
     }
 }
 
